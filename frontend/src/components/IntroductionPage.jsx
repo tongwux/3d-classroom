@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
@@ -178,125 +178,298 @@ const RoomButton = styled.button`
   }
 `;
 
-const characters = [
-  {
-    name: "Miss Wood",
-    role: "Virtual Teacher",
-    description: "An experienced educator with a passion for interactive learning. Miss Wood brings subjects to life with her engaging teaching style.",
-    image: "/teacher-avatar.png"
-  },
-  {
-    name: "Mrs. Quiz",
-    role: "Teaching Assistant",
-    description: "Your helpful AI assistant who ensures you understand the material through interactive quizzes and personalized feedback.",
-    image: "/assistant-avatar.png"
-  },
-  {
-    name: "Raina",
-    role: "Classmate",
-    description: "A curious and creative student who loves to explore new ideas and share different perspectives in group discussions.",
-    image: "/student1-avatar.png"
-  },
-  {
-    name: "Eddie",
-    role: "Classmate",
-    description: "An analytical thinker who excels at problem-solving and enjoys helping others understand complex concepts.",
-    image: "/student2-avatar.png"
-  },
-  {
-    name: "Gracie",
-    role: "Classmate",
-    description: "An enthusiastic learner with a talent for making connections between different subjects and real-world applications.",
-    image: "/student3-avatar.png"
-  }
-];
+const FileUploadSection = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: ${fadeIn} 1s ease-out;
+`;
 
-const rooms = [
-  {
-    name: "Main Classroom",
-    role: "Learning Space",
-    description: "A dynamic virtual classroom where you'll engage in interactive lessons, participate in real-time discussions, and experience immersive learning with Miss Wood.",
-    buttonText: "Enter Classroom"
-  },
-  {
-    name: "Quiz Room",
-    role: "Assessment Space",
-    description: "Test your knowledge and track your progress with interactive quizzes and assessments guided by Mrs. Quiz.",
-    buttonText: "Take a Quiz"
-  },
-  {
-    name: "Discussion Room",
-    role: "Collaborative Space",
-    description: "Join your classmates in engaging discussions, share ideas, and work together on group projects.",
-    buttonText: "Join Discussion"
+const FileDropzone = styled.div`
+  width: 100%;
+  height: 200px;
+  border: 2px dashed ${props => props.isDragActive ? '#4facfe' : 'rgba(255, 255, 255, 0.3)'};
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: ${props => props.isDragActive ? 'rgba(79, 172, 254, 0.1)' : 'transparent'};
+  margin-bottom: 1rem;
+
+  &:hover {
+    border-color: #4facfe;
+    background: rgba(79, 172, 254, 0.1);
   }
-];
+`;
+
+const UploadText = styled.p`
+  color: #e6f0ff;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  text-align: center;
+`;
+
+const GuidelineCard = styled.div`
+  width: 100%;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-top: 2rem;
+  animation: ${fadeIn} 1s ease-out;
+`;
+
+const GuidelineTitle = styled.h3`
+  color: #4facfe;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+`;
+
+const GuidelineText = styled.p`
+  color: #e6f0ff;
+  line-height: 1.6;
+`;
+
+const SectionList = styled.div`
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const SectionItem = styled.div`
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(10px);
+  }
+`;
+
+const StartButton = styled.button`
+  margin-top: 2rem;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: fit-content;
+  align-self: center;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+  }
+`;
 
 const IntroductionPage = () => {
   const navigate = useNavigate();
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [guideline, setGuideline] = useState(null);
+  const [selectedSection, setSelectedSection] = useState(null);
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragActive(false);
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragActive(false);
+    
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setUploadedFile(file);
+      // TODO: Replace with actual API call
+      try {
+        // Simulated API response
+        setTimeout(() => {
+          setGuideline({
+            title: "Course Guidelines",
+            content: "Based on your course material, here are the sections for your virtual classroom experience:",
+            sections: [
+              {
+                id: 1,
+                title: "Introduction to the Subject",
+                description: "Basic concepts and fundamental principles"
+              },
+              {
+                id: 2,
+                title: "Core Concepts",
+                description: "Deep dive into main topics"
+              },
+              {
+                id: 3,
+                title: "Advanced Topics",
+                description: "Complex concepts and applications"
+              }
+            ]
+          });
+        }, 1000);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      // TODO: Replace with actual API call
+      try {
+        // Simulated API response
+        setTimeout(() => {
+          setGuideline({
+            title: "Course Guidelines",
+            content: "Based on your course material, here are the sections for your virtual classroom experience:",
+            sections: [
+              {
+                id: 1,
+                title: "Introduction to the Subject",
+                description: "Basic concepts and fundamental principles"
+              },
+              {
+                id: 2,
+                title: "Core Concepts",
+                description: "Deep dive into main topics"
+              },
+              {
+                id: 3,
+                title: "Advanced Topics",
+                description: "Complex concepts and applications"
+              }
+            ]
+          });
+        }, 1000);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
+
+  const handleSectionClick = (sectionId) => {
+    setSelectedSection(sectionId);
+    // You can store the selected section in localStorage or context
+    // to access it in the classroom component
+    localStorage.setItem('selectedSection', sectionId);
+  };
+
+  const handleStartClass = () => {
+    navigate('/main-classroom');
+  };
 
   const handleRoomClick = (roomName) => {
-    switch(roomName) {
-      case "Main Classroom":
-        navigate('/main-classroom');
-        break;
-      case "Quiz Room":
-        navigate('/quiz');
-        break;
-      case "Discussion Room":
-        navigate('/discussion');
-        break;
-      default:
-        break;
-    }
+    navigate(`/${roomName.toLowerCase()}`);
   };
 
   return (
     <PageContainer>
       <ContentWrapper>
-        <Title>Welcome to the Virtual Classroom</Title>
+        <Title>Welcome to Your Virtual Classroom</Title>
         
         <Section>
-          <SectionTitle>Meet Your Virtual Classmates</SectionTitle>
-          <Grid>
-            {characters.map((character, index) => (
-              <Card key={index}>
-                <CharacterImage>
-                  {/* Character image will be added here */}
-                </CharacterImage>
-                <Name>{character.name}</Name>
-                <Role>{character.role}</Role>
-                <Description>{character.description}</Description>
-              </Card>
-            ))}
-          </Grid>
+          <SectionTitle>Upload Your Course Material</SectionTitle>
+          <FileUploadSection>
+            <FileDropzone
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDrop}
+              isDragActive={isDragActive}
+              onClick={() => document.getElementById('fileInput').click()}
+            >
+              <input
+                type="file"
+                id="fileInput"
+                style={{ display: 'none' }}
+                onChange={handleFileSelect}
+                accept=".pdf,.doc,.docx,.txt"
+              />
+              <UploadText>
+                {uploadedFile 
+                  ? `File uploaded: ${uploadedFile.name}`
+                  : 'Drag and drop your course material here or click to browse'}
+              </UploadText>
+            </FileDropzone>
+
+            {guideline && (
+              <>
+                <GuidelineTitle>{guideline.title}</GuidelineTitle>
+                <GuidelineText>{guideline.content}</GuidelineText>
+                <SectionList>
+                  {guideline.sections.map((section) => (
+                    <SectionItem 
+                      key={section.id}
+                      onClick={() => handleSectionClick(section.id)}
+                      style={{
+                        background: selectedSection === section.id 
+                          ? 'rgba(79, 172, 254, 0.2)' 
+                          : 'rgba(255, 255, 255, 0.05)'
+                      }}
+                    >
+                      <h3 style={{ color: '#4facfe', marginBottom: '0.5rem' }}>
+                        Section {section.id}: {section.title}
+                      </h3>
+                      <p style={{ color: '#e6f0ff' }}>{section.description}</p>
+                    </SectionItem>
+                  ))}
+                </SectionList>
+                <StartButton onClick={handleStartClass}>
+                  Start Class
+                </StartButton>
+              </>
+            )}
+          </FileUploadSection>
         </Section>
 
         <Section>
-          <SectionTitle>Explore Learning Spaces</SectionTitle>
+          <SectionTitle>Available Rooms</SectionTitle>
           <Grid>
-            {rooms.map((room, index) => (
-              <Card key={index} onClick={() => handleRoomClick(room.name)} clickable>
-                <RoomImage>
-                  {/* Room image will be added here */}
-                </RoomImage>
-                <Name>{room.name}</Name>
-                <Role>{room.role}</Role>
-                <Description>{room.description}</Description>
-                <RoomButton onClick={(e) => {
-                  e.stopPropagation();
-                  handleRoomClick(room.name);
-                }}>
-                  {room.buttonText}
-                </RoomButton>
-              </Card>
-            ))}
+            <Card onClick={() => handleRoomClick('main-classroom')}>
+              <RoomImage style={{ backgroundImage: "url('/classroom-bg.jpg')" }} />
+              <Name>Main Classroom</Name>
+              <Description>Enter the main virtual classroom for an immersive learning experience.</Description>
+              <RoomButton>Enter Room</RoomButton>
+            </Card>
+            <Card onClick={() => handleRoomClick('Discussion')}>
+              <RoomImage style={{ backgroundImage: "url('/discussion-room-bg.png')" }} />
+              <Name>Discussion Room</Name>
+              <Description>Join interactive discussions with your virtual classmates and teacher.</Description>
+              <RoomButton>Enter Room</RoomButton>
+            </Card>
+            <Card onClick={() => handleRoomClick('Quiz')}>
+              <RoomImage style={{ backgroundImage: "url('/quiz-room-bg.png')" }} />
+              <Name>Quiz Room</Name>
+              <Description>Test your knowledge and get instant feedback on your progress.</Description>
+              <RoomButton>Enter Room</RoomButton>
+            </Card>
           </Grid>
         </Section>
-
-        <ContinueButton onClick={() => handleRoomClick("Main Classroom")}>
-          Start Learning
-        </ContinueButton>
       </ContentWrapper>
     </PageContainer>
   );
