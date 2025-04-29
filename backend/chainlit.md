@@ -1,4 +1,4 @@
-# Welcome to Learning.AI! 🎓
+# Welcome to DeepStudy! 🎓
 
 ## Your Personal AI Learning Assistant
 

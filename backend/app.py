@@ -5,15 +5,12 @@ from chainlit.input_widget import Select, Slider, TextInput
 async def start():
     # Set custom elements
     await cl.Message(
-        content="Welcome to Learning.AI! 🎓",
+        content="Welcome to DeepStudy! 🎓",
         actions=[
             cl.Action(name="start_tutorial", value="tutorial", label="Start Tutorial"),
             cl.Action(name="view_resources", value="resources", label="View Resources")
         ]
     ).send()
-
-    # Add elements
-    await cl.Image(path="backend/assets/welcome.png", name="welcome", display="inline").send()
 
 @cl.on_message
 async def main(message: str):
@@ -25,16 +22,6 @@ async def main(message: str):
     
     # Simulate processing
     await msg.start()
-    
-    # Add interactive elements based on the message
-    if "example" in message.lower():
-        elements.append(
-            cl.Image(
-                path="backend/assets/example.png",
-                name="example",
-                display="inline"
-            )
-        )
     
     # Create the response with elements
     response = f"{message}"

@@ -175,7 +175,7 @@ const NavBar = () => {
     <NavContainer>
       <Logo onClick={() => handleNavigation('home')}>
         <IoSchoolOutline size={24} color="#4facfe" />
-        <LogoText>Learning.AI</LogoText>
+        <LogoText>DeepStudy</LogoText>
       </Logo>
 
       <NavLinks>

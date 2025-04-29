@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
+import AuthForms from './AuthForms';
 
 const fadeIn = keyframes`
   from {
@@ -28,6 +29,8 @@ const Container = styled.div`
   top: 0;
   left: 0;
   overflow-y: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 `;
 
 const Title = styled.h1`
@@ -77,19 +80,29 @@ const StartButton = styled.button`
 
 const WelcomePage = () => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleStartLearning = () => {
     navigate('/introduction');
   };
 
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
   return (
     <Container>
-      <Title>Welcome to Learning.AI</Title>
+      <Title>Welcome to DeepStudy</Title>
       <Subtitle>
         Embark on an innovative learning journey where artificial intelligence meets education.
         Discover a new way of learning that adapts to your unique needs.
       </Subtitle>
-      <StartButton onClick={handleStartLearning}>Start Learning</StartButton>
+      
+      {!isAuthenticated ? (
+        <AuthForms onAuthSuccess={handleAuthSuccess} />
+      ) : (
+        <StartButton onClick={handleStartLearning}>Start Learning</StartButton>
+      )}
     </Container>
   );
 };
