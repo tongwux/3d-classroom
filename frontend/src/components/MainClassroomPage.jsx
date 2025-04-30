@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
-import { IoExitOutline } from 'react-icons/io5';
+import { IoExitOutline, IoHeadsetOutline } from 'react-icons/io5';
 
 const slowZoom = keyframes`
   0% {
@@ -145,11 +145,41 @@ const QuitButton = styled.button`
   }
 `;
 
+// Add a more noticeable immersive mode button
+const ImmersiveModeCTA = styled.button`
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 94, 98, 0.4);
+  }
+
+  svg {
+    font-size: 1.2rem;
+  }
+`;
+
 const MainClassroomPage = () => {
   const navigate = useNavigate();
 
   const handleQuit = () => {
     navigate('/introduction');
+  };
+
+  const handleImmersiveMode = () => {
+    navigate('/voice-interaction');
   };
 
   return (
@@ -164,6 +194,9 @@ const MainClassroomPage = () => {
             <TeacherName>Miss Wood</TeacherName>
             <TeacherRole>Virtual Teacher</TeacherRole>
           </TeacherInfoContainer>
+          <ImmersiveModeCTA onClick={handleImmersiveMode}>
+            <IoHeadsetOutline /> Immersive Mode
+          </ImmersiveModeCTA>
         </CharacterSection>
         <ChatSection>
           <iframe
@@ -181,4 +214,4 @@ const MainClassroomPage = () => {
   );
 };
 
-export default MainClassroomPage; 
+export default MainClassroomPage;

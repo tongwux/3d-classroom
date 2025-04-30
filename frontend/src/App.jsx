@@ -9,6 +9,7 @@ import MainClassroomPage from './components/MainClassroomPage';
 import QuizRoom from './components/QuizRoom';
 import DiscussionRoom from './components/DiscussionRoom';
 import ProfilePage from './components/ProfilePage';
+import VoiceInteractionPage from './components/VoiceInteractionPage';
 import './App.css';
 
 const AppContainer = styled.div`
@@ -37,6 +38,7 @@ function App() {
             <Route path="/quiz" element={<QuizRoom />} />
             <Route path="/discussion" element={<DiscussionRoom />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/voice-interaction" element={<VoiceInteractionPage />} />
           </Routes>
         </PageWrapper>
       </AppContainer>
